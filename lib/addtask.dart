@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
-
-import 'Todo.dart';
+import 'todo.dart';
 
 class AddTask extends StatefulWidget {
   final Localstore db;
@@ -15,7 +13,7 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   final name = TextEditingController();
   final note = TextEditingController();
-
+  bool pin = false;
   @override
   Widget build(BuildContext context) {
 
@@ -36,13 +34,24 @@ class _AddTaskState extends State<AddTask> {
                 note: note.text,
                 time: now,
                 done: false,
+                pinned: pin,
               );
               item.save();
             }
             Navigator.pop(context, false);
           },
           icon: Icon(Icons.arrow_back),
-        )
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  pin = !pin;
+                });
+              },
+              icon: Icon(pin ? Icons.push_pin : Icons.push_pin_outlined)
+          )
+        ],
       ),
       body: Column(
         children: [

@@ -6,12 +6,14 @@ class Todo {
   String note;
   DateTime time;
   bool done;
+  bool pinned;
   Todo({
     required this.id,
     required this.title,
     required this.note,
     required this.time,
     required this.done,
+    required this.pinned,
   });
 
   Map<String, dynamic> toMap() {
@@ -21,6 +23,7 @@ class Todo {
       'note': note,
       'time': time.millisecondsSinceEpoch,
       'done': done,
+      'pinned': pinned,
     };
   }
 
@@ -31,6 +34,7 @@ class Todo {
       note: map['note'],
       time: DateTime.fromMicrosecondsSinceEpoch(map['time']),
       done: map['done'],
+      pinned: map['pinned'],
     );
   }
 }

@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/addtask.dart';
 import 'package:localstore/localstore.dart';
 import 'package:todolist/task.dart';
-
-import 'Todo.dart';
+import 'todo.dart';
+import 'dart:developer';
 
 void main() {
 
@@ -28,80 +27,145 @@ class ToDoList extends StatefulWidget {
 
 class _ToDoListState extends State<ToDoList> {
   final _db = Localstore.instance;
-  final _items = <String, Todo>{};
+  final _itemsPinned = <String, Todo>{};
+  final _itemsUnpinned = <String, Todo>{};
   StreamSubscription<Map<String, dynamic>>? _subscription;
 
+  @override
   void initState() {
     _subscription = _db.collection('todos').stream.listen((event) {
       setState(() {
         final item = Todo.fromMap(event);
-        _items.putIfAbsent(item.id, () => item);
+        if(item.pinned) {
+          _itemsPinned.putIfAbsent(item.id, () => item);
+        } else {
+          _itemsUnpinned.putIfAbsent(item.id, () => item);
+        }
       });
     });
     if (kIsWeb) _db.collection('todos').stream.asBroadcastStream();
+
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      body: ListView.builder(
-        itemCount: _items.keys.length,
-        itemBuilder: (context, index) {
-          final key = _items.keys.elementAt(index);
-          final item = _items[key]!;
-          debugPrint('title: ${item.title}');
-          debugPrint('note: ${item.note}');
-
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Task(item.title, item.note))
-              );
-            },
-            child: Card(
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            item.delete();
-                            _items.remove(item.id);
-                          });
-                        },
-                      ),
-                      Text(item.title, style: TextStyle(fontSize: 16),),
-                    ],
+      body: Column(
+        children: [
+          Text('Pinned'),
+          Flexible(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: _itemsPinned.keys.length,
+              itemBuilder: (context, index) {
+                final key = _itemsPinned.keys.elementAt(index);
+                final item = _itemsPinned[key]!;
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Task(item))
+                    );
+                  },
+                  child: Card(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  setState(() {
+                                    item.delete();
+                                    _itemsPinned.remove(item.id);
+                                  });
+                                },
+                              ),
+                              Text(item.title, style: TextStyle(fontSize: 16),),
+                            ],
+                          ),
+                          Spacer(),
+                          Checkbox(
+                            value: item.done,
+                            onChanged: (value) {
+                              item.done = value!;
+                              item.save();
+                            },
+                          )
+                        ]
+                    ),
                   ),
-                  Spacer(),
-                  Checkbox(
-                    value: item.done,
-                    onChanged: (value) {
-                      item.done = value!;
-                      item.save();
-                    },
-                  )
-                ]
-              ),
+                );
+              },
             ),
-          );
-        },
+          ),
+          Text('Unpinned'),
+          Flexible(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: _itemsUnpinned.keys.length,
+              itemBuilder: (context, index) {
+                final key = _itemsUnpinned.keys.elementAt(index);
+                final item = _itemsUnpinned[key]!;
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Task(item))
+                    );
+                  },
+                  child: Card(
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  setState(() {
+                                    item.delete();
+                                    _itemsUnpinned.remove(item.id);
+                                  });
+                                },
+                              ),
+                              Text(item.title, style: TextStyle(fontSize: 16),),
+                            ],
+                          ),
+                          Spacer(),
+                          Checkbox(
+                            value: item.done,
+                            onChanged: (value) {
+                              item.done = value!;
+                              item.save();
+                            },
+                          )
+                        ]
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AddTask(_db))
-          );
-        },
-        child: const Text('+', style: TextStyle(fontSize: 28))
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddTask(_db))
+            );
+          },
+          child: const Text('+', style: TextStyle(fontSize: 28))
       ),
     );
+  }
+  @override
+  void dispose() {
+    if (_subscription != null) _subscription?.cancel();
+    super.dispose();
   }
 }
