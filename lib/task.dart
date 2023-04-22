@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:localstore/localstore.dart';
 import 'package:todolist/todo.dart';
-
 import 'main.dart';
 
 
