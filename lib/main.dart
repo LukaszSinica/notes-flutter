@@ -1,12 +1,15 @@
-import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/reminders.dart';
 import 'package:todolist/todolist.dart';
+import 'package:todolist/service/notification_service.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() {
 
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
+  tz.initializeTimeZones();
   runApp(
       const MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -33,10 +36,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[_index],
-      floatingActionButton: FloatingActionButton(
-          onPressed: () { },
-          child: const Text('+', style: TextStyle(fontSize: 28))
-      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         onTap: (value) {

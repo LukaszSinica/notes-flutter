@@ -40,6 +40,7 @@ class _ToDoListState extends State<ToDoList> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notes'),
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
@@ -77,13 +78,10 @@ class _ToDoListState extends State<ToDoList> {
                             ],
                           ),
                           Spacer(),
-                          Checkbox(
-                            value: item.done,
-                            onChanged: (value) {
-                              item.done = value!;
-                              item.save();
-                            },
-                          )
+                          Padding(
+                              padding: EdgeInsets.only(right: 16),
+                              child: Icon(Icons.push_pin, color: Colors.blue,)
+                          ),
                         ]
                     ),
                   ),
@@ -91,7 +89,7 @@ class _ToDoListState extends State<ToDoList> {
               },
             ),
           ),
-          if(_itemsUnpinned.length > 0) Text('Unpinned'),
+          if(_itemsUnpinned.length > 0) SizedBox(height: 20,),
           Flexible(
             child: ListView.builder(
               shrinkWrap: true,
@@ -126,13 +124,6 @@ class _ToDoListState extends State<ToDoList> {
                             ],
                           ),
                           Spacer(),
-                          Checkbox(
-                            value: item.done,
-                            onChanged: (value) {
-                              item.done = value!;
-                              item.save();
-                            },
-                          )
                         ]
                     ),
                   ),

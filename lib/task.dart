@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:todolist/todo.dart';
-import 'main.dart';
-
+import 'datepicker.dart';
+import 'package:todolist/service/notification_service.dart';
 
 class Task extends StatefulWidget {
   final Todo item;
@@ -13,6 +13,7 @@ class Task extends StatefulWidget {
 }
 
 class _TaskState extends State<Task> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,10 +35,19 @@ class _TaskState extends State<Task> {
                   });
                 },
                 icon: Icon(widget.item.pinned ? Icons.push_pin : Icons.push_pin_outlined)
-            )
+            ),
+            DatePickerTxt(scheduleNotification: () {
+              debugPrint('Notification scheduled for $scheduleTime');
+              NotificationService().scheduleNotification(
+                  title: 'Scheduled Notification',
+                  body: '$scheduleTime',
+                  scheduledNotificationDateTime: scheduleTime
+              );
+            })
           ],
         ),
         body: Text(widget.item.note)
     );
   }
 }
+
