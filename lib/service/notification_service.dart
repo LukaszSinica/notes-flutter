@@ -36,7 +36,7 @@ class NotificationService {
       {int id = 0,
         String? title,
         String? body,
-        String? payLoad,
+        String? payload,
         required DateTime scheduledNotificationDateTime}) async {
     return notificationsPlugin.zonedSchedule(
         id,
@@ -48,6 +48,7 @@ class NotificationService {
         ),
         await notificationDetails(),
         androidAllowWhileIdle: true,
+        payload: payload,
         uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime);
   }

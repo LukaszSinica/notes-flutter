@@ -39,9 +39,11 @@ class _TaskState extends State<Task> {
             DatePickerTxt(scheduleNotification: () {
               debugPrint('Notification scheduled for $scheduleTime');
               NotificationService().scheduleNotification(
+                  id: DateTime.now().hashCode,
                   title: 'Scheduled Notification',
                   body: '$scheduleTime',
-                  scheduledNotificationDateTime: scheduleTime
+                  scheduledNotificationDateTime: scheduleTime,
+                  payload: widget.item.id,
               );
             })
           ],

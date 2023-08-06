@@ -34,14 +34,25 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final PageController controller = PageController();
     return Scaffold(
-      body: screens[_index],
+      body: PageView(
+        scrollDirection: Axis.horizontal,
+        controller: controller,
+        onPageChanged: (id) {
+          setState(() {
+            _index = id;
+          });
+        },
+        children: screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
         onTap: (value) {
           setState(() {
             _index = value;
           });
+          controller.animateToPage(value, duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
         },
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.note_alt), label: 'Notes'),
