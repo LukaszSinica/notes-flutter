@@ -40,10 +40,20 @@ class _TaskState extends State<Task> {
               debugPrint('Notification scheduled for $scheduleTime');
               NotificationService().scheduleNotification(
                   id: DateTime.now().hashCode,
-                  title: 'Scheduled Notification',
-                  body: '$scheduleTime',
+                  title: widget.item.title,
+                  body: widget.item.note,
                   scheduledNotificationDateTime: scheduleTime,
-                  payload: widget.item.id,
+              ).then((value) => showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text('Notification created successfully'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ))
               );
             })
           ],

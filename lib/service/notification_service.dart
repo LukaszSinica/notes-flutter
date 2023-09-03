@@ -36,7 +36,6 @@ class NotificationService {
       {int id = 0,
         String? title,
         String? body,
-        String? payload,
         required DateTime scheduledNotificationDateTime}) async {
     return notificationsPlugin.zonedSchedule(
         id,
@@ -48,12 +47,11 @@ class NotificationService {
         ),
         await notificationDetails(),
         androidAllowWhileIdle: true,
-        payload: payload,
         uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  Future cancelNotification(int id) {
-    return notificationsPlugin.cancel(id);
+  Future cancelNotification(int? id) {
+    return notificationsPlugin.cancel(id!);
   }
 }
