@@ -47,11 +47,17 @@ class _RemindersState extends State<Reminders> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(notifications?[position].title as String, style: TextStyle(
+                              Text(
+                                notifications?[position].title as String, style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               ),),
-                              Text(notifications?[position].body as String),
+                              Text(
+                                notifications?[position].body as String,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                softWrap: false,
+                              ),
                             ],
                           ),
                           ElevatedButton(

@@ -37,7 +37,6 @@ class _TaskState extends State<Task> {
                 icon: Icon(widget.item.pinned ? Icons.push_pin : Icons.push_pin_outlined)
             ),
             DatePickerTxt(scheduleNotification: () {
-              debugPrint('Notification scheduled for $scheduleTime');
               NotificationService().scheduleNotification(
                   id: DateTime.now().hashCode,
                   title: widget.item.title,
@@ -58,7 +57,12 @@ class _TaskState extends State<Task> {
             })
           ],
         ),
-        body: Text(widget.item.note)
+        body: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(widget.item.note, style: TextStyle(
+            fontSize: 24,
+          ),),
+        )
     );
   }
 }
