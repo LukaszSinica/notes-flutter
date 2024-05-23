@@ -1,7 +1,7 @@
 # notes-flutter
 
 Project created in flutter using localstore and flutter_local_notifications library.
-The app allows users to add note, pin them and shedule them to remind them of the specific note they wrote.
+The app allows users to add note, pin them and shedule them to remind user of the specific note they wrote.
 
 ## Screens from App
 
